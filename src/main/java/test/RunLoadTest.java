@@ -36,7 +36,7 @@ public class RunLoadTest {
 	// Initialize cache
 	public RunLoadTest() {		
 		try {
-			cm = new DefaultCacheManager("/home/bela/infinispan.xml");
+			cm = new DefaultCacheManager("infinispan.xml");
 			testCache = cm.getCache("distCache");
 
 		} catch (IOException e) {

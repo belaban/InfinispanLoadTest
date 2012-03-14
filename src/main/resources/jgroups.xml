@@ -1,0 +1,92 @@
+
+<!--
+  Fast configuration for local mode, ie. all members reside on the same host. Setting ip_ttl to 0 means that
+  no multicast packet will make it outside the local host.
+  Therefore, this configuration will NOT work to cluster members residing on different hosts !
+
+  Author: Bela Ban
+-->
+
+<config xmlns="urn:org:jgroups"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:org:jgroups
+        http://www.jgroups.org/schema/JGroups-3.1.xsd">
+
+    <UDP
+         mcast_addr="232.5.5.5" mcast_port="50000"
+         ucast_recv_buf_size="20M"
+         ucast_send_buf_size="640K"
+         mcast_recv_buf_size="25M"
+         mcast_send_buf_size="640K"
+         tos="8"
+         ip_ttl="0"
+
+
+         loopback="false"
+         
+         discard_incompatible_packets="true"
+         max_bundle_size="64000"
+         max_bundle_timeout="30"
+         bundler_type="old2"
+         enable_bundling="true"
+         enable_unicast_bundling="true"
+         bundler_capacity="50000"
+         enable_diagnostics="true"
+         thread_naming_pattern="cl"
+
+         timer_type="new"
+         timer.min_threads="2"
+         timer.max_threads="4"
+         timer.keep_alive_time="3000"
+         timer.queue_max_size="500"
+
+         thread_pool.enabled="true"
+         thread_pool.min_threads="10"
+         thread_pool.max_threads="30"
+         thread_pool.keep_alive_time="5000"
+         thread_pool.queue_enabled="true"
+         thread_pool.queue_max_size="100000"
+         thread_pool.rejection_policy="discard"
+
+         oob_thread_pool.enabled="true"
+         oob_thread_pool.min_threads="4"
+         oob_thread_pool.max_threads="30"
+         oob_thread_pool.keep_alive_time="5000"
+         oob_thread_pool.queue_enabled="false"
+         oob_thread_pool.queue_max_size="100"
+         oob_thread_pool.rejection_policy="discard"/>
+
+    <PING timeout="1000"
+            num_initial_members="3"
+            break_on_coord_rsp="true"/>
+
+    <FD_SOCK/>
+
+    <pbcast.NAKACK2 xmit_interval="1000"
+                    xmit_table_num_rows="100"
+                    xmit_table_msgs_per_row="10000"
+                    xmit_table_max_compaction_time="30000"
+                    max_msg_batch_size="500"
+                    use_mcast_xmit="false"
+                    discard_delivered_msgs="true"/>
+  
+    <UNICAST2 
+              max_bytes="20M"
+              xmit_table_num_rows="100"
+              xmit_table_msgs_per_row="2000"
+              xmit_table_max_compaction_time="30000"
+              max_msg_batch_size="100"/>
+
+    
+
+    <pbcast.STABLE stability_delay="1000" desired_avg_gossip="50000"
+                   max_bytes="8m"/>
+    <pbcast.GMS print_local_addr="true" join_timeout="3000"
+                view_bundling="true"/>
+    <UFC max_credits="4M"
+         min_threshold="0.2"/>
+    <MFC max_credits="4M"
+         min_threshold="0.2"/>
+    <FRAG2 frag_size="60000"  />
+
+</config>

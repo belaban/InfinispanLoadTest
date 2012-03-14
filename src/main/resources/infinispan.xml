@@ -1,0 +1,51 @@
+<!--  This file should be located on /opt/allot/conf -->
+
+<infinispan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:infinispan:config:5.1 http://www.infinispan.org/schemas/infinispan-config-5.1.xsd"
+  xmlns="urn:infinispan:config:5.1">
+   
+  <global>
+     <transport clusterName="infinispan-cluster">
+        <properties>
+           <property name="configurationFile" value="jgroups.xml"/>
+        </properties>
+     </transport>
+      <globalJmxStatistics enabled="true"/>
+  </global>
+   
+
+
+   <namedCache name="replCache">
+       <!--<invocationBatching enabled="true"/>-->
+       <lazyDeserialization enabled="true"/>
+       <transaction transactionMode="NON_TRANSACTIONAL" />
+       <unsafe unreliableReturnValues="true"/>
+
+      <clustering mode="replication">
+         <stateTransfer
+            timeout="240000"
+            fetchInMemoryState="false"
+         />
+         <async asyncMarshalling="false" useReplQueue="true" replQueueMaxElements="1000"/>
+      </clustering>
+       
+   </namedCache>
+
+    <namedCache name="distCache">
+        <!--<invocationBatching enabled="true"/>-->
+        <unsafe unreliableReturnValues="true"/>
+        <lazyDeserialization enabled="true"/>
+        <!--<eviction maxEntries="500000" strategy="LIRS" threadPolicy="DEFAULT" wakeUpInterval="5000"/>-->
+        <transaction transactionMode="NON_TRANSACTIONAL" />
+        <clustering mode="distribution">
+            <stateTransfer fetchInMemoryState="false" />
+            <async asyncMarshalling="false" />
+            <!--<sync replTimeout="5000"/>-->
+            <l1 enabled="true" />
+            <hash numOwners="2"/>
+        </clustering>
+    </namedCache>
+
+
+
+</infinispan>
